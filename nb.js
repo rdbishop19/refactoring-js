@@ -1,3 +1,9 @@
+function fileName() {
+	var theError = new Error('here I am');
+	return theError.stack.match(/\\(\w+?\.js)\:/)[1];
+}
+console.log(`Welcome to ${fileName()}!`);
+
 var easy = 'easy';
 var medium = 'medium';
 var hard = 'hard';
@@ -20,14 +26,13 @@ var labelProbabilities = [];
 var chordCountsInLabels = {};
 var probabilityOfChordsInLabels = {};
 function train(chords, label) {
-  var index;
 	songs.push([ label, chords ]);
 	labels.push(label);
-	for (index = 0; index < chords.length; index++) {
-		if (!allChords.includes(chords[index])) {
-			allChords.push(chords[index]);
+	chords.forEach((chord) => {
+		if (!allChords.includes(chord)) {
+			allChords.push(chord);
 		}
-	}
+	});
 	if (Object.keys(labelCounts).includes(label)) {
 		labelCounts[label] = labelCounts[label] + 1;
 	} else {
@@ -74,7 +79,7 @@ setLabelProbabilities();
 setChordCountsInLabels();
 setProbabilityOfChordsInLabels();
 function classify(chords) {
-  var smoothing = 1.01;
+	var smoothing = 1.01;
 	console.log(labelProbabilities);
 	var classified = {};
 	Object.keys(labelProbabilities).forEach(function(difficulty) {
