@@ -11,15 +11,14 @@ paperBag = [ 'bm7', 'e', 'c', 'g', 'b7', 'f', 'em', 'a', 'cmaj7', 'em7', 'a7', '
 toxic = [ 'cm', 'eb', 'g', 'cdim', 'eb7', 'd7', 'db7', 'ab', 'gmaj7', 'g7' ];
 bulletproof = [ 'd#m', 'g#', 'b', 'f#', 'g#m', 'c#' ];
 song_11 = [];
-
 var songs = [];
 var labels = [];
 var allChords = [];
 var labelCounts = [];
 var labelProbabilities = [];
+
 var chordCountsInLabels = {};
 var probabilityOfChordsInLabels = {};
-
 function train(chords, label) {
 	songs.push([ label, chords ]);
 	labels.push(label);
@@ -27,25 +26,22 @@ function train(chords, label) {
 		if (!allChords.includes(chords[i])) {
 			allChords.push(chords[i]);
 		}
-		if (!!Object.keys(labelCounts).includes(label)) {
-			labelCounts[label] = labelCounts[label] + 1;
-		} else {
-			labelCounts[label] = 1;
-		}
+	}
+	if (!!Object.keys(labelCounts).includes(label)) {
+		labelCounts[label] = labelCounts[label] + 1;
+	} else {
+		labelCounts[label] = 1;
 	}
 }
-
 function getNumberOfSongs() {
 	return songs.length;
 }
-
 function setLabelProbabilities() {
 	Object.keys(labelCounts).forEach(function(label) {
 		var numberOfSongs = getNumberOfSongs();
 		labelProbabilities[label] = labelCounts[label] / numberOfSongs;
 	});
 }
-
 function setChordCountsInLabels() {
 	songs.forEach(function(i) {
 		if (chordCountsInLabels[i[0]] === undefined) {
@@ -53,14 +49,13 @@ function setChordCountsInLabels() {
 		}
 		i[1].forEach(function(j) {
 			if (chordCountsInLabels[i[0]][j] > 0) {
-				chordCountsInLabels[i[0][j]] = chordCountsInLabels[i[0]][j] + 1;
+				chordCountsInLabels[i[0]][j] = chordCountsInLabels[i[0]][j] + 1;
 			} else {
 				chordCountsInLabels[i[0]][j] = 1;
 			}
 		});
 	});
 }
-
 function setProbabilityOfChordsInLabels() {
 	probabilityOfChordsInLabels = chordCountsInLabels;
 	Object.keys(probabilityOfChordsInLabels).forEach(function(i) {
@@ -69,7 +64,6 @@ function setProbabilityOfChordsInLabels() {
 		});
 	});
 }
-
 train(imagine, 'easy');
 train(somewhere_over_the_rainbow, 'easy');
 train(tooManyCooks, 'easy');
@@ -79,11 +73,9 @@ train(creep, 'medium');
 train(paperBag, 'hard');
 train(toxic, 'hard');
 train(bulletproof, 'hard');
-
 setLabelProbabilities();
 setChordCountsInLabels();
 setProbabilityOfChordsInLabels();
-
 function classify(chords) {
 	var ttal = labelProbabilities;
 	console.log(ttal);
@@ -102,6 +94,5 @@ function classify(chords) {
 	});
 	console.log(classified);
 }
-
 classify([ 'd', 'g', 'e', 'dm' ]);
 classify([ 'f#m7', 'a', 'dadd9', 'dmaj7', 'bm', 'bm7', 'd', 'f#m' ]);
