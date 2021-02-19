@@ -24,13 +24,13 @@ function setSongs() {
 	bulletproof = [ 'd#m', 'g#', 'b', 'f#', 'g#m', 'c#' ];
 }
 
-function setup(){
-  songs = [];
-  allChords = new Set();
-  labelCounts = new Map();
-  labelProbabilities = new Map();
-  chordCountsInLabels = new Map();
-  probabilityOfChordsInLabels = new Map();
+function setup() {
+	songs = [];
+	allChords = new Set();
+	labelCounts = new Map();
+	labelProbabilities = new Map();
+	chordCountsInLabels = new Map();
+	probabilityOfChordsInLabels = new Map();
 }
 
 function train(chords, label) {
@@ -71,8 +71,8 @@ function setProbabilityOfChordsInLabels() {
 }
 
 function trainAll() {
-  setDifficulties();
-  setup();
+	setDifficulties();
+	setup();
 	setSongs();
 	train(imagine, easy);
 	train(somewhereOverTheRainbow, easy);
