@@ -18,21 +18,15 @@ paperBag = [ 'bm7', 'e', 'c', 'g', 'b7', 'f', 'em', 'a', 'cmaj7', 'em7', 'a7', '
 toxic = [ 'cm', 'eb', 'g', 'cdim', 'eb7', 'd7', 'db7', 'ab', 'gmaj7', 'g7' ];
 bulletproof = [ 'd#m', 'g#', 'b', 'f#', 'g#m', 'c#' ];
 var songs = [];
-var labels = [];
-var allChords = [];
-var labelCounts = [];
-var labelProbabilities = [];
+var allChords = new Set();
+var labelCounts = {};
+var labelProbabilities = {};
 
 var chordCountsInLabels = {};
 var probabilityOfChordsInLabels = {};
 function train(chords, label) {
 	songs.push([ label, chords ]);
-	labels.push(label);
-	chords.forEach((chord) => {
-		if (!allChords.includes(chord)) {
-			allChords.push(chord);
-		}
-	});
+	chords.forEach((chord) => allChords.add(chord));
 	if (Object.keys(labelCounts).includes(label)) {
 		labelCounts[label] = labelCounts[label] + 1;
 	} else {
