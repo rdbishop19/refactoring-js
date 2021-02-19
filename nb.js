@@ -17,20 +17,21 @@ creep = [ 'g', 'gsus4', 'b', 'bsus4', 'c', 'cmsus4', 'cm6' ];
 paperBag = [ 'bm7', 'e', 'c', 'g', 'b7', 'f', 'em', 'a', 'cmaj7', 'em7', 'a7', 'f7', 'b' ];
 toxic = [ 'cm', 'eb', 'g', 'cdim', 'eb7', 'd7', 'db7', 'ab', 'gmaj7', 'g7' ];
 bulletproof = [ 'd#m', 'g#', 'b', 'f#', 'g#m', 'c#' ];
+
 var songs = [];
 var allChords = new Set();
 var labelCounts = new Map();
 var labelProbabilities = new Map();
+var chordCountsInLabels = new Map();
+var probabilityOfChordsInLabels = new Map();
 
-var chordCountsInLabels = {};
-var probabilityOfChordsInLabels = {};
 function train(chords, label) {
 	songs.push({ label, chords });
 	chords.forEach((chord) => allChords.add(chord));
 	if (Array.from(labelCounts.keys()).includes(label)) {
 		labelCounts.set(label, labelCounts.get(label) + 1);
 	} else {
-    labelCounts.set(label, 1);
+		labelCounts.set(label, 1);
 	}
 }
 function setLabelProbabilities() {
@@ -40,23 +41,23 @@ function setLabelProbabilities() {
 }
 function setChordCountsInLabels() {
 	songs.forEach(function(song) {
-		if (chordCountsInLabels[song.label] === undefined) {
-			chordCountsInLabels[song.label] = {};
+		if (chordCountsInLabels.get(song.label) === undefined) {
+			chordCountsInLabels.set(song.label, {});
 		}
 		song.chords.forEach(function(chord) {
-			if (chordCountsInLabels[song.label][chord] > 0) {
-				chordCountsInLabels[song.label][chord] += 1;
+			if (chordCountsInLabels.get(song.label)[chord] > 0) {
+				chordCountsInLabels.get(song.label)[chord] += 1;
 			} else {
-				chordCountsInLabels[song.label][chord] = 1;
+				chordCountsInLabels.get(song.label)[chord] = 1;
 			}
 		});
 	});
 }
 function setProbabilityOfChordsInLabels() {
 	probabilityOfChordsInLabels = chordCountsInLabels;
-	Object.keys(probabilityOfChordsInLabels).forEach(function(difficulty) {
-		Object.keys(probabilityOfChordsInLabels[difficulty]).forEach(function(chord) {
-			probabilityOfChordsInLabels[difficulty][chord] /= songs.length;
+	probabilityOfChordsInLabels.forEach(function(_chords, difficulty) {
+		Object.keys(probabilityOfChordsInLabels.get(difficulty)).forEach(function(chord) {
+			probabilityOfChordsInLabels.get(difficulty)[chord] /= songs.length;
 		});
 	});
 }
@@ -79,7 +80,7 @@ function classify(chords) {
 	labelProbabilities.forEach(function(_probabilities, difficulty) {
 		var first = labelProbabilities.get(difficulty) + smoothing;
 		chords.forEach(function(chord) {
-			var probabilityOfChordInLabel = probabilityOfChordsInLabels[difficulty][chord];
+			var probabilityOfChordInLabel = probabilityOfChordsInLabels.get(difficulty)[chord];
 			if (probabilityOfChordInLabel) {
 				first = first * (probabilityOfChordInLabel + smoothing);
 			}
